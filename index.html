@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ذاكرلي | منصة يوسف التعليمية</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00F5C4;
+            --bg-dark: #020605;
+            --card-bg: #0a1110;
+            --text-main: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #1a2a27;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 245, 196, 0.3);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        .status-card {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .lesson-card {
+            background: var(--card-bg);
+            border: 1px solid #1a2a27;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .lesson-card i {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .btn-download {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background: rgba(0, 245, 196, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ذاكرلي <i class="fas fa-graduation-cap"></i></h1>
+        <p>أهلاً بك يا <strong>يوسف</strong>، دروسك جاهزة للتحميل.</p>
+    </div>
+
+    <div class="container">
+        <div class="status-card">
+            <i class="fas fa-shield-check" style="color: var(--primary)"></i>
+            <div id="status-text">جاري مزامنة بيانات الطالب (589718)...</div>
+        </div>
+
+        <div id="content" class="grid">
+            <div class="lesson-card">
+                <i class="fas fa-video"></i>
+                <div class="badge">القسم الإضافي</div>
+                <h3>محاضرة تجريبية</h3>
+                <p>اضغط لتحميل الرابط المباشر لـ 1DM</p>
+                <button class="btn-download" onclick="fetchLink()">
+                    <i class="fas fa-link"></i> نسخ الرابط
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الهوية المحقونة
+        const studentInfo = {
+            name: "يوسف",
+            code: "589718",
+            device: "DID-F6A32BC43B5F"
+        };
+
+        async function init() {
+            document.getElementById('status-text').innerText = `تم الاتصال بنجاح | مرحباً يوسف`;
+            // ملاحظة: هنا سنضيف لاحقاً كود الـ Proxy لجلب البيانات الفعلية
+        }
+
+        function fetchLink() {
+            // كود محاكاة سحب الـ m3u8 من المنصة الأصلية
+            alert("سيتم سحب رابط الفيديو ونسخه لـ 1DM فوراً");
+        }
+
+        init();
+    </script>
+</body>
+  </html>
+  
