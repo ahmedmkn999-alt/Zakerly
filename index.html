@@ -2,21 +2,25 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ذاكرلي | تسجيل دخول سريع</title>
+    <title>ذاكرلي | دخول سريع</title>
     <style>
         body { background: #020605; color: #00F5C4; text-align: center; font-family: sans-serif; padding-top: 100px; }
-        .btn { background: #00F5C4; color: #000; padding: 15px 30px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
+        .btn { 
+            background: #00F5C4; color: #000; padding: 20px 40px; border: none; 
+            border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(0, 245, 196, 0.4);
+        }
     </style>
 </head>
 <body>
-    <h1>مرحباً يا يوسف 👋</h1>
-    <p>اضغط على الزر أدناه لفتح المنصة وتخطى صفحة الدخول تلقائياً</p>
+    <h1>أهلاً يا يوسف 👋</h1>
+    <p>اضغط لتشغيل المنصة الأصلية وتخطى "بيئة غير آمنة" فوراً</p>
     
-    <button class="btn" onclick="go()">فتح المنصة الآن</button>
+    <button class="btn" onclick="openPlatform()">تشغيل المنصة المفتوحة</button>
 
     <script>
-        function go() {
-            // 1. زرع بيانات يوسف في المتصفح عشان الموقع ميسألش عن الكود
+        function openPlatform() {
+            // 1. زرع بيانات الهوية (يوسف) عشان ميسألش عن كود الدخول
             localStorage.setItem("studentInfo", JSON.stringify({
                 student_name: "يوسف", 
                 studentCode: "589718", 
@@ -24,7 +28,8 @@
             }));
             localStorage.setItem("activeCode", "589718");
 
-            // 2. التوجه للمنصة الأصلية (صفحة المواد مباشرة)
+            // 2. التوجه للمنصة الأصلية في صفحة كاملة
+            // بنستخدم الرابط المباشر للمواد لتخطي صفحة "تثبيت الآن"
             window.location.href = "https://fulll-mark.vercel.app/subjects";
         }
     </script>
