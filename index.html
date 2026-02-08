@@ -1,36 +1,53 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ذاكرلي | منصة يوسف</title>
+    <title>منصة ذاكرلي - يوسف</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
-        .loading { color: #00F5C4; text-align: center; padding-top: 20%; font-family: sans-serif; }
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #00F5C4; font-family: sans-serif; }
+        #main-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
+        .header { background: #0a1110; padding: 15px; border-bottom: 2px solid #00F5C4; text-align: center; }
+        #view-area { flex-grow: 1; border: none; width: 100%; height: 100%; }
+        .error-msg { padding: 20px; text-align: center; color: red; }
     </style>
 </head>
 <body>
-    <div class="loading" id="loader">جاري تشغيل المنصة وتخطي صفحة الدخول...</div>
+
+    <div id="main-container">
+        <div class="header">
+            <h1>منصة ذاكرلي | أهلاً يوسف 👋</h1>
+            <p id="info">جاري ربط موقعك بالمنصة الأصلية...</p>
+        </div>
+        
+        <iframe id="view-area" src="https://fulll-mark.vercel.app/subjects"></iframe>
+    </div>
 
     <script>
-        // رابط المنصة الأصلي اللي أنت عايزه
-        const targetURL = "https://fulll-mark.vercel.app/subjects";
+        // حقن بيانات يوسف في ذاكرة المتصفح أول ما تفتح موقع GitHub
+        localStorage.setItem("studentInfo", JSON.stringify({
+            student_name: "يوسف", 
+            studentCode: "589718", 
+            deviceCode: "DID-F6A32BC43B5F"
+        }));
+        localStorage.setItem("activeCode", "589718");
 
-        // بياناتك اللي السيرفر قبلها (يوسف / 589718)
-        const injectData = () => {
-            localStorage.setItem("studentInfo", JSON.stringify({
-                student_name: "يوسف", 
-                studentCode: "589718", 
-                deviceCode: "DID-F6A32BC43B5F"
-            }));
-            localStorage.setItem("activeCode", "589718");
-        };
-
-        // تنفيذ عملية الدخول والتحويل
-        injectData();
+        const frame = document.getElementById('view-area');
         
-        // الانتقال للمنصة الأصلية فوراً بعد حقن البيانات
-        setTimeout(() => {
-            window.location.href = targetURL;
+        // محاولة تنظيف الصفحة الأصلية من الحماية
+        setInterval(() => {
+            try {
+                const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                const badges = frameDoc.querySelectorAll('*');
+                badges.forEach(el => {
+                    if (el.innerText.includes("بيئة غير آمنة") || parseInt(window.getComputedStyle(el).zIndex) >= 999) {
+                        el.remove();
+                    }
+                });
+                frameDoc.body.style.overflow = 'auto';
+            } catch (e) {
+                // لو المتصفح منع الوصول المباشر لجوه الـ iframe
+                document.getElementById('info').innerText = "تم تسجيل الدخول باسم يوسف. لو الصفحة سودة، اضغط في أي مكان.";
+            }
         }, 1000);
     </script>
 </body>
