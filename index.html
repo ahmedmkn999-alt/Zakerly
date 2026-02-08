@@ -1,55 +1,37 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ذاكرلي | مشاهدة مباشرة</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <title>ذاكرلي | منصة يوسف</title>
     <style>
-        :root { --primary: #00F5C4; --bg: #020605; }
-        body { background: var(--bg); color: white; font-family: sans-serif; text-align: center; padding: 20px; }
-        .player-container { 
-            max-width: 800px; margin: 20px auto; background: #0a1110; 
-            border: 1px solid var(--primary); border-radius: 12px; overflow: hidden;
-        }
-        video { width: 100%; aspect-ratio: 16/9; background: #000; }
-        .video-info { padding: 15px; text-align: right; }
-        h1 { color: var(--primary); }
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
+        .loading { color: #00F5C4; text-align: center; padding-top: 20%; font-family: sans-serif; }
     </style>
 </head>
 <body>
-
-    <h1>ذاكرلي - مشاهدة مباشرة <i class="fas fa-play"></i></h1>
-    <p>أهلاً يا يوسف، الفيديو جاهز للمشاهدة الآن.</p>
-
-    <div class="player-container">
-        <video id="video" controls></video>
-        <div class="video-info">
-            <h3>محاضرة القسم الإضافي</h3>
-            <p id="status" style="color: var(--primary);">جاري تحميل الفيديو من السيرفر...</p>
-        </div>
-    </div>
+    <div class="loading" id="loader">جاري تشغيل المنصة وتخطي صفحة الدخول...</div>
 
     <script>
-        // الرابط اللي لقطناه من الـ Network (حط الرابط اللي هيطلعلك هنا)
-        const videoSrc = 'رابط_الـ_m3u8_الذي_وجدته_هنا'; 
-        const video = document.getElementById('video');
+        // رابط المنصة الأصلي اللي أنت عايزه
+        const targetURL = "https://fulll-mark.vercel.app/subjects";
 
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play();
-                document.getElementById('status').innerText = "بث مباشر آمن ✅";
-            });
-        }
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoSrc;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
-        }
+        // بياناتك اللي السيرفر قبلها (يوسف / 589718)
+        const injectData = () => {
+            localStorage.setItem("studentInfo", JSON.stringify({
+                student_name: "يوسف", 
+                studentCode: "589718", 
+                deviceCode: "DID-F6A32BC43B5F"
+            }));
+            localStorage.setItem("activeCode", "589718");
+        };
+
+        // تنفيذ عملية الدخول والتحويل
+        injectData();
+        
+        // الانتقال للمنصة الأصلية فوراً بعد حقن البيانات
+        setTimeout(() => {
+            window.location.href = targetURL;
+        }, 1000);
     </script>
 </body>
 </html>
