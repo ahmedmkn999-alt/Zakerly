@@ -2,23 +2,67 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ذاكرلي | الدخول النهائي</title>
+    <title>بوابة يوسف البرمجية | Path Discovery</title>
     <style>
-        body { background: #000; color: #00F5C4; text-align: center; font-family: sans-serif; padding-top: 100px; }
-        .btn { background: #00F5C4; color: #000; padding: 20px 40px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.5rem; }
+        body { background: #020605; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
+        .section { margin: 20px auto; max-width: 900px; background: #0a1110; padding: 20px; border-radius: 15px; border: 1px solid #1a2a27; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+        .btn { background: #00F5C4; color: #000; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.8rem; transition: 0.2s; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,245,196,0.3); }
+        .source { background: transparent; color: #00F5C4; border: 1px solid #00F5C4; }
+        h2 { color: #00F5C4; border-bottom: 2px solid #1a2a27; padding-bottom: 10px; }
     </style>
 </head>
 <body>
-    <h1>أهلاً يا يوسف 👋</h1>
-    <button class="btn" onclick="go()">🚀 فتح المنصة (589718)</button>
+    <h1>بوابة الاكتشاف - يوسف 🚀</h1>
+    <p>بناءً على معايير برمجة Next.js، جرب المسارات التالية:</p>
+
+    <div class="section">
+        <h2>📚 مسارات تعليمية (LMS)</h2>
+        <div class="grid" id="lms-paths"></div>
+    </div>
+
+    <div class="section">
+        <h2>⚙️ مسارات تقنية وإدارية</h2>
+        <div class="grid" id="tech-paths"></div>
+    </div>
+
     <script>
-        function go() {
-            // زرع البيانات لمرة أخيرة
-            localStorage.setItem("studentInfo", JSON.stringify({student_name: "يوسف", studentCode: "589718", deviceCode: "DID-F6A32BC43B5F"}));
+        const lmsPaths = ["subjects", "lessons", "extra-section", "videos", "courses", "exams", "quiz", "homework", "grades", "materials", "assignments", "schedule", "teachers", "my-courses"];
+        const techPaths = ["profile", "dashboard", "admin", "login", "register", "settings", "noti", "notifications", "exam-history", "support", "help", "api", "auth", "account"];
+
+        function inject() {
+            // زرع بيانات يوسف لضمان استجابة السيرفر
+            localStorage.setItem("studentInfo", JSON.stringify({
+                student_name: "يوسف", 
+                studentCode: "589718", 
+                deviceCode: "DID-F6A32BC43B5F"
+            }));
             localStorage.setItem("activeCode", "589718");
-            // التوجه للمواد مباشرة
-            window.location.href = "https://fulll-mark.vercel.app/subjects";
         }
+
+        function createButtons(list, containerId) {
+            const container = document.getElementById(containerId);
+            list.forEach(path => {
+                // زر الفتح العادي
+                let b1 = document.createElement('button');
+                b1.className = 'btn';
+                b1.innerText = path;
+                b1.onclick = () => { inject(); window.location.href = "https://fulll-mark.vercel.app/" + path; };
+                
+                // زر عرض السورس
+                let b2 = document.createElement('button');
+                b2.className = 'btn source';
+                b2.innerText = "Source " + path;
+                b2.onclick = () => { inject(); window.location.href = "view-source:https://fulll-mark.vercel.app/" + path; };
+
+                container.appendChild(b1);
+                container.appendChild(b2);
+            });
+        }
+
+        createButtons(lmsPaths, 'lms-paths');
+        createButtons(techPaths, 'tech-paths');
     </script>
 </body>
 </html>
