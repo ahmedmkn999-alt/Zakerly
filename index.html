@@ -1,12 +1,13 @@
-// الاستماع للينكات المكتشفة من Firebase
-db.ref('app_interceptor').on('child_added', (snapshot) => {
+// الاستماع للينكات المكتشفة من السيرفر
+db.ref('live_capture').on('child_added', (snapshot) => {
     const data = snapshot.val();
-    const feed = document.getElementById('app-live-feed'); // المكان اللي بيعرض النتائج
-    feed.innerHTML = `
-        <div class="card" style="border-right: 5px solid var(--accent); margin-bottom:10px;">
-            <small style="color:var(--muted)">${data.time}</small>
-            <div style="word-break:break-all; font-family:monospace; margin:5px 0;">${data.link}</div>
-            <a href="${data.link}" target="_blank" class="btn-action">تشغيل الفيديو المكتشف</a>
-        </div>
-    ` + feed.innerHTML;
+    const area = document.getElementById('harvest-results'); // جدول النتائج في لوحتك
+    area.innerHTML = `
+        <tr style="background: rgba(34, 211, 238, 0.05); border-right: 4px solid var(--accent);">
+            <td>${data.time}</td>
+            <td style="color:var(--accent); font-size:0.7rem;">${data.link}</td>
+            <td><span class="badge">صيد مباشر</span></td>
+            <td><a href="${data.link}" target="_blank" class="btn"><i class="fas fa-play"></i></a></td>
+        </tr>
+    ` + area.innerHTML;
 });
