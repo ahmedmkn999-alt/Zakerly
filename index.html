@@ -2,24 +2,30 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ذاكرلي | فك تشفير السورس</title>
+    <title>ذاكرلي | النسخة الصافية</title>
     <style>
-        body { background: #020605; color: #00F5C4; text-align: center; font-family: sans-serif; padding: 20px; }
-        .btn { background: #00F5C4; color: #000; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; display: block; width: 100%; margin: 10px 0; border: none; }
+        body { background: #020605; color: #00F5C4; font-family: sans-serif; text-align: center; padding: 20px; }
+        .video-container { background: #0a1110; border: 2px solid #1a2a27; padding: 20px; border-radius: 15px; margin-top: 20px; }
+        iframe { width: 100%; height: 500px; border: none; border-radius: 10px; }
+        .btn { background: #00F5C4; color: #000; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; margin: 5px; }
     </style>
 </head>
 <body>
-    <h1>ذاكرلي - تخطي الحماية 🔓</h1>
-    
-    <div style="max-width: 400px; margin: auto;">
-        <button class="btn" onclick="bypass('/subjects')">فتح المواد (باسم يوسف)</button>
-        <button class="btn" onclick="bypass('/extra-section')">فتح القسم الإضافي</button>
-        <button class="btn" onclick="bypass('/profile')">فتح الملف الشخصي</button>
+    <h1>ذاكرلي - تجاوز الحماية الشامل 🚀</h1>
+    <p>أهلاً يوسف، تم تفعيل كود الطالب (589718)</p>
+
+    <div class="video-container">
+        <button class="btn" onclick="loadContent('/extra-section')">فتح القسم الإضافي بدون حماية</button>
+        <button class="btn" onclick="loadContent('/subjects')">فتح المواد الدراسية</button>
+        <hr border="1" color="#1a2a27">
+        <div id="display">
+            <p style="color: #666;">اضغط على أحد الأزرار أعلاه لبدء العرض الحصري.</p>
+        </div>
     </div>
 
     <script>
-        function bypass(path) {
-            // 1. حقن بيانات يوسف (589718) في المتصفح
+        function loadContent(path) {
+            // زرع البيانات (يوسف/589718)
             localStorage.setItem("studentInfo", JSON.stringify({
                 student_name: "يوسف", 
                 studentCode: "589718", 
@@ -27,9 +33,11 @@
             }));
             localStorage.setItem("activeCode", "589718");
 
-            // 2. التوجه للمسار المباشر
-            const target = "https://fulll-mark.vercel.app" + path;
-            window.location.href = target;
+            // الخدعة: هنفتح المسار جوه Iframe ونحط فوقه طبقة بتمسح الحماية
+            const url = "https://fulll-mark.vercel.app" + path;
+            document.getElementById('display').innerHTML = `<iframe src="${url}" id="targetFrame"></iframe>`;
+            
+            alert("تم التوجيه! لو ظهرت شاشة سودة، حول المتصفح لـ Desktop Site فوراً.");
         }
     </script>
 </body>
