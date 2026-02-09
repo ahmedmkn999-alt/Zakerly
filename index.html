@@ -2,41 +2,32 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ذاكرلي | فحص السورس كود</title>
+    <title>ذاكرلي | Bypass Pro</title>
     <style>
-        body { background: #020605; color: #00F5C4; text-align: center; font-family: sans-serif; padding: 20px; }
-        .card { background: #0a1110; border: 1px solid #1a2a27; padding: 20px; border-radius: 12px; margin: 15px auto; max-width: 500px; }
-        .link-text { background: #1a2a27; color: #fff; padding: 10px; border-radius: 5px; word-break: break-all; font-size: 0.9rem; margin: 10px 0; display: block; text-decoration: none; }
-        .btn { background: #00F5C4; color: #000; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
+        body { background: #000; color: #00F5C4; text-align: center; font-family: sans-serif; padding-top: 100px; }
+        .btn { background: #00F5C4; color: #000; padding: 20px 40px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.5rem; }
     </style>
 </head>
 <body>
-    <h1>ذاكرلي - استخراج روابط الفيديوهات 🛠️</h1>
-    <p>بما أن المتصفح قد يمنع فتح "view-source" تلقائياً، انسخ الرابط وضعه في المتصفح يدوياً.</p>
-    
-    <div class="card">
-        <h3>1. صفحة المواد (Subjects)</h3>
-        <a href="view-source:https://fulll-mark.vercel.app/subjects" class="link-text">view-source:https://fulll-mark.vercel.app/subjects</a>
-    </div>
-
-    <div class="card">
-        <h3>2. القسم الإضافي (Extra)</h3>
-        <a href="view-source:https://fulll-mark.vercel.app/extra-section" class="link-text">view-source:https://fulll-mark.vercel.app/extra-section</a>
-    </div>
-
-    <div class="card">
-        <h3>3. صفحة الفيديوهات (Videos)</h3>
-        <a href="view-source:https://fulll-mark.vercel.app/videos" class="link-text">view-source:https://fulll-mark.vercel.app/videos</a>
-    </div>
+    <h1>أهلاً يا يوسف 👋</h1>
+    <p>تم تجهيز "المفتاح" لدخول المنصة (589718)</p>
+    <button class="btn" onclick="crack()">🚀 دخول وتخطي الحماية</button>
 
     <script>
-        // زرع البيانات لمرة أخيرة لضمان استجابة السيرفر
-        localStorage.setItem("studentInfo", JSON.stringify({
-            student_name: "يوسف", 
-            studentCode: "589718", 
-            deviceCode: "DID-F6A32BC43B5F"
-        }));
-        localStorage.setItem("activeCode", "589718");
+        function crack() {
+            // 1. زرع البيانات اللي المنصة بتدور عليها
+            const studentData = {
+                student_name: "يوسف", 
+                studentCode: "589718", 
+                deviceCode: "DID-F6A32BC43B5F"
+            };
+            localStorage.setItem("studentInfo", JSON.stringify(studentData));
+            localStorage.setItem("activeCode", "589718");
+
+            // 2. التوجه للمنصة
+            // النصيحة: المنصة بتعمل فحص كل 10 ثواني (10000ms)
+            window.location.href = "https://fulll-mark.vercel.app/subjects";
+        }
     </script>
 </body>
 </html>
