@@ -1,13 +1,150 @@
-// الاستماع للينكات المكتشفة من السيرفر
-db.ref('live_capture').on('child_added', (snapshot) => {
-    const data = snapshot.val();
-    const area = document.getElementById('harvest-results'); // جدول النتائج في لوحتك
-    area.innerHTML = `
-        <tr style="background: rgba(34, 211, 238, 0.05); border-right: 4px solid var(--accent);">
-            <td>${data.time}</td>
-            <td style="color:var(--accent); font-size:0.7rem;">${data.link}</td>
-            <td><span class="badge">صيد مباشر</span></td>
-            <td><a href="${data.link}" target="_blank" class="btn"><i class="fas fa-play"></i></a></td>
-        </tr>
-    ` + area.innerHTML;
-});
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUCK YOU | المحتوى الكامل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #020617; --bg-card: #0f172a; --accent: #00F5C4;
+            --text-primary: #ffffff; --text-secondary: #94a3b8; --border: #1e293b;
+        }
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg-main); color: var(--text-primary); padding-bottom: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border); background: var(--bg-main); position: sticky; top: 0; z-index: 100; }
+        .brand-name { font-weight: 900; font-size: 1.5rem; color: var(--accent); }
+        .back-btn { background: var(--bg-card); color: var(--text-secondary); padding: 8px 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); }
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        .page-title { margin-bottom: 20px; font-size: 1.2rem; color: var(--accent); border-right: 4px solid var(--accent); padding-right: 10px; }
+        .grid-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .main-card { background: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; }
+        .main-card:hover { border-color: var(--accent); }
+        .card-icon { width: 50px; height: 50px; background: rgba(0, 245, 196, 0.1); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px; }
+        .list-item { background: var(--bg-card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .video-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 15px; text-align: center; }
+        .video-thumbnail { height: 120px; background: #000; display: flex; align-items: center; justify-content: center; color: #333; font-size: 3rem; }
+        .play-btn { background: var(--accent); color: #000; border: none; padding: 12px; width: 90%; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 10px auto; display: block; text-decoration: none; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="back-btn hidden" id="globalBackBtn" onclick="goBack()">← رجوع</div>
+        <div class="brand-name">FUCK YOU</div>
+    </header>
+
+    <div id="app-container" class="container"></div>
+
+    <script>
+        // ============================================
+        // 📂 قاعدة البيانات الكاملة (30 فيديو)
+        // ============================================
+        const appData = {
+            subjects: [
+                { id: 1, name: 'لغة عربية', icon: 'fas fa-book', teachers: [101] },
+                { id: 2, name: 'English', icon: 'fas fa-language', teachers: [] },
+                { id: 3, name: 'كيمياء', icon: 'fas fa-flask', teachers: [] },
+                { id: 4, name: 'فيزياء', icon: 'fas fa-atom', teachers: [] },
+                { id: 5, name: 'Le français', icon: 'fas fa-flag', teachers: [] },
+                { id: 6, name: 'أحياء', icon: 'fas fa-dna', teachers: [] }
+            ],
+            teachers: {
+                101: { name: 'أ. محمد صلاح', subtitle: 'خبير مادة لغة عربية', courses: [201] }
+            },
+            courses: {
+                201: { name: 'معسكر 4 - 1', lessons: [301, 302, 303, 304] }
+            },
+            lessons: {
+                301: { name: 'المهمة الأولى', videos: [401, 402, 403, 404, 405, 406, 407] },
+                302: { name: 'المهمة الثانية', videos: [501, 502, 503, 504, 505, 506, 507, 508, 509, 510] },
+                303: { name: 'المهمة الثالثة', videos: [601, 602, 603, 604, 605, 606, 607, 608] },
+                304: { name: 'المهمة الرابعة', videos: [701, 702, 703, 704, 705] }
+            },
+            videos: {
+                // المهمة 1 (7 فيديوهات)
+                401: { title: 'م1 - فيديو 1', url: 'https://river-4-404.rtbcdn.ru/hls-vod/JOKcfo4ThFTRk-KZT1R8bA/1770906065/3258/0x5000c500fa777afb/f96ae9a94b1045e992cf43ee4b5e1124.mp4.m3u8?i=640x360_401' },
+                402: { title: 'م1 - فيديو 2', url: 'https://river-4-429.rtbcdn.ru/hls-vod/OrNE6CrO4MAU7PE6t-tCqg/1770899367/3350/0x5000c500e9ebfaa3/bf1bc518cd86482b898a8ba396c165b0.mp4.m3u8?i=640x360_333' },
+                403: { title: 'م1 - فيديو 3', url: 'https://river-4-439.rtbcdn.ru/hls-vod/MYOTzNPSb_ud43ignYNBRw/1770900324/3310/0x5000c500e9ebfc57/136dcb44f5724d75ad61d844ccd9fe28.mp4.m3u8?i=640x360_373' },
+                404: { title: 'م1 - فيديو 4', url: 'https://river-5-514.rtbcdn.ru/hls-vod/3Bf7mlKwl3OwiAUtlfQ0IQ/1770901851/3390/0x5000c500fa782d37/1bf6154eb3c948c08b30dff5b8cf3e0a.mp4.m3u8?i=640x360_336' },
+                405: { title: 'م1 - فيديو 5', url: 'https://river-4-403.rtbcdn.ru/hls-vod/rGMAZ0dlegXCNhDX2kyNKw/1770912909/3322/0x5000c500e9d38090/581f716fbae24607842ed95d74c458b.mp4.m3u8?i=640x360_253' },
+                406: { title: 'م1 - فيديو 6', url: 'https://river-5-542.rtbcdn.ru/hls-vod/YkmluclHVt3zCD5xOb_leA/1770906025/3390/0x5000c500fa774fb5/a91cd165cb5042019967492d757ce2bc.mp4.m3u8?i=640x360_243' },
+                407: { title: 'م1 - فيديو 7', url: 'https://river-3-355.rtbcdn.ru/hls-vod/GF75tx2aEcmN1Mtd9uBwlg/1770913072/3310/0x5000c500e9311d0c/35d2205e0b224feba003d195622782f8.mp4.m3u8?i=640x360_344' },
+
+                // المهمة 2 (10 فيديوهات)
+                501: { title: 'م2 - فيديو 1', url: 'https://river-5-545.rtbcdn.ru/hls-vod/n4xhIJ3A3vxhm4bJY8m4Hw/1770848186/2588/0x5000039ce85bb9b1/55db6cb0efff4fd2bd58ff171dee59a2.mp4.m3u8?i=640x360_386' },
+                502: { title: 'م2 - فيديو 2', url: 'https://river-4-420.rtbcdn.ru/hls-vod/pjaX5HKLYXcnd27wcNkCEQ/1770840389/3350/0x5000c500e9ee0171/3e4539fda35b4645a3dbe302789df138.mp4.m3u8?i=640x360_325' },
+                503: { title: 'م2 - فيديو 3', url: 'https://river-3-301.rtbcdn.ru/hls-vod/XtkDcxYrXrpgs1MgkjaUUQ/1770848377/1792/0x5000c500c91c19e4/576d62536ed44446b835ba342c6d0d13.mp4.m3u8?i=640x360_388' },
+                504: { title: 'م2 - فيديو 4', url: 'https://river-3-383.rtbcdn.ru/hls-vod/k9bBz8_N70ARedVQIJ8vYg/1770843778/2730/0x5000039ce8686bb1/6ed528e31ba8417aaa54e81b75bb062c.mp4.m3u8?i=640x360_369' },
+                505: { title: 'م2 - فيديو 5', url: 'https://river-4-410.rtbcdn.ru/hls-vod/DkhNP9LWH6xgGKKPSLTJXA/1770849774/2183/0x5000c500e7511400/b30b5b83c0ad4a22af76090087c88d63.mp4.m3u8?i=640x360_419' },
+                506: { title: 'م2 - فيديو 6', url: 'https://river-4-410.rtbcdn.ru/hls-vod/Uri-r1cqDabXVMksdsr82Q/1770845655/2650/0x5000039ce863f209/9149fe56307e4a22bfc3490ec2828952.mp4.m3u8?i=640x360_414' },
+                507: { title: 'م2 - فيديو 7', url: 'https://river-5-548.rtbcdn.ru/hls-vod/-vod/EOEwEdOqt3x457qvCKJOng/1770845584/1885/0x5000c500e538ffba/b84048f7dd764982add63f1a4137877e.mp4.m3u8?i=640x360_246' },
+                508: { title: 'م2 - فيديو 8', url: 'https://river-3-346.rtbcdn.ru/hls-vod/-vod/EePZZrbmD8lAbyCE9GLO3Q/1770890074/3356/0x5000c500fa6e5c56/dea95bbf0b77408a945335307a1f3e9a.mp4.m3u8?i=640x360_371' },
+                509: { title: 'م2 - فيديو 9', url: 'https://river-3-374.rtbcdn.ru/hls-vod/z1Ktj5wnb9UOaA25qXYxtQ/1770866112/2732/0x5000039ce8694d2d/4f4b9d98f564442db3442814dc6394d0.mp4.m3u8?i=640x360_252' },
+                510: { title: 'م2 - فيديو 10', url: 'https://river-5-533.rtbcdn.ru/hls-vod/-vod/gc34t_3TByWUPTnlwg8tDg/1770871870/3392/0x5000c500fa77b281/ee6503b8f23642aea0e753a0c103305a.mp4.m3u8?i=640x360_275' },
+
+                // المهمة 3 (8 فيديوهات)
+                601: { title: 'م3 - فيديو 1', url: 'https://river-3-383.rtbcdn.ru/hls-vod/LMWGA4A5AL9mkbYk2pN90Q/1770755437/2718/0x5000039ce8382b9d/1cd538f039db44c6aa193ce0dec5237d.mp4.m3u8?i=640x360_389' },
+                602: { title: 'م3 - فيديو 2', url: 'https://river-5-545.rtbcdn.ru/hls-vod/NzZiyjzjqfkjBe5IDSkdgw/1770747317/1905/0x5000c500e53cfc85/499b2a799471451b9e0cf435326f093a.mp4.m3u8?i=640x317' },
+                603: { title: 'م3 - فيديو 3', url: 'https://river-4-417.rtbcdn.ru/hls-vod/HES2JiW7UAhoCKpZjy-KSQ/1770752353/2652/0x5000039ce840d819/8877ec28227a43c8bf0357324d90817c.mp4.m3u8?i=640x360_343' },
+                604: { title: 'م3 - فيديو 4', url: 'https://river-5-551.rtbcdn.ru/hls-vod/JegQTKJMvixE3rKZQpLN-g/1770751080/3276/0x5000c500fa7005c9/65e5470f872f4617b013adc19667690b.mp4.m3u8?i=640x360_338' },
+                605: { title: 'م3 - فيديو 5', url: 'https://river-3-340.rtbcdn.ru/hls-vod/lKUgpcpCbXnyinSA3lWBeg/1770766113/2078/0x5000c500f1de02fe/2a5458b15d5243b080ca992bf0315f3a.mp4.m3u8?i=640x360_243' },
+                606: { title: 'م3 - فيديو 6', url: 'https://river-5-554.rtbcdn.ru/hls-vod/3ijo2PhVBnqLnL7hB89Lyw/1770760938/1901/0x5000c500e53c92d9/cda0bf48b845455b8b60ba7702e8f74d.mp4.m3u8?i=640x360_334' },
+                607: { title: 'م3 - فيديو 7', url: 'https://river-4-438.rtbcdn.ru/hls-vod/oDElue1htzyHgaqEIaVX1Q/1770767042/2672/0x5000039ce838ce05/5a5cbcf9cbac4420bc48a0fe719d63df.mp4.m3u8?i=640x360_359' },
+                608: { title: 'م3 - فيديو 8', url: 'https://river-3-301.rtbcdn.ru/hls-vod/FbWMUY2EQeZ8JExnerWazw/1770767422/2626/0x5000039ce8694de5/f19331a1e15f4f2c8c8782f63e4bec38.mp4.m3u8?i=640x360_387' },
+
+                // المهمة 4 (5 فيديوهات)
+                701: { title: 'م4 - فيديو 1', url: 'https://river-4-416.rtbcdn.ru/hls-vod/Y1mKcotpyG7OD3EerEuHig/1770899901/3338/0x5000c500e9ebdaeb/e2cc562d008f4a5abe2b53394f9b86e6.mp4.m3u8?i=640x360_415' },
+                702: { title: 'م4 - فيديو 2', url: 'https://river-5-548.rtbcdn.ru/hls-vod/hFXYivbk3N_kGl1HOOPJpw/1770896615/2678/0x5000039ce8399fc5/748c2766d42145aa9eb7b60f016c6bd9.mp4.m3u8?i=640x360_390' },
+                703: { title: 'م4 - فيديو 3', url: 'https://river-3-341.rtbcdn.ru/hls-vod/NusWtkbzDhscIVcuO_cmzQ/1770902780/1770/0x5000c500c6fe42ea/2bf676d4fedb45f3be848088789449cc.mp4.m3u8?i=640x360_411' },
+                704: { title: 'م4 - فيديو 4', url: 'https://river-4-440.rtbcdn.ru/hls-vod/pQDgcj6M-m_duv-DeWG-qw/1770901905/2225/0x5000c500e74f4faa/fc9d7c16e45b4c9b950ba3baf604c4be.mp4.m3u8?i=640x360_384' },
+                705: { title: 'م4 - فيديو 5', url: 'https://river-3-348.rtbcdn.ru/hls-vod/fbsrdgdxWG_tz3mcq-kzDA/1770917477/1875/0x5000c500e539c3c5/51c5532f874640d796f172ad88649bf2.mp4.m3u8?i=640x360_374' }
+            }
+        };
+
+        // محرك تشغيل المنصة (Nav Engine)
+        const container = document.getElementById('app-container');
+        const backBtn = document.getElementById('globalBackBtn');
+        let navHistory = [];
+
+        function render(view, id = null) {
+            container.innerHTML = ''; navHistory.push({view, id});
+            backBtn.classList.toggle('hidden', navHistory.length <= 1);
+            
+            if(view === 'home') {
+                const g = document.createElement('div'); g.className = 'grid-cards';
+                appData.subjects.forEach(s => g.innerHTML += `<div class="main-card" onclick="render('teachers', ${s.id})"><div class="card-icon"><i class="${s.icon}"></i></div><b>${s.name}</b></div>`);
+                container.appendChild(g);
+            } else if(view === 'teachers') {
+                container.innerHTML = `<h2 class="page-title">مدرسين ${appData.subjects.find(s=>s.id===id).name}</h2>`;
+                appData.subjects.find(s=>s.id===id).teachers.forEach(tid => {
+                    const t = appData.teachers[tid];
+                    container.innerHTML += `<div class="list-item" onclick="render('courses', ${tid})"><b>${t.name}</b><i class="fas fa-chevron-left" style="color:var(--accent)"></i></div>`;
+                });
+            } else if(view === 'courses') {
+                container.innerHTML = `<h2 class="page-title">كورسات ${appData.teachers[id].name}</h2>`;
+                appData.teachers[id].courses.forEach(cid => {
+                    container.innerHTML += `<div class="list-item" onclick="render('lessons', ${cid})"><b>${appData.courses[cid].name}</b><i class="fas fa-chevron-left" style="color:var(--accent)"></i></div>`;
+                });
+            } else if(view === 'lessons') {
+                container.innerHTML = `<h2 class="page-title">محاضرات ${appData.courses[id].name}</h2>`;
+                appData.courses[id].lessons.forEach(lid => {
+                    container.innerHTML += `<div class="list-item" onclick="render('videos', ${lid})"><b>${appData.lessons[lid].name}</b><i class="fas fa-chevron-left" style="color:var(--accent)"></i></div>`;
+                });
+            } else if(view === 'videos') {
+                container.innerHTML = `<h2 class="page-title">فيديوهات ${appData.lessons[id].name}</h2>`;
+                appData.lessons[id].videos.forEach(vid => {
+                    const v = appData.videos[vid];
+                    container.innerHTML += `<div class="video-card"><div class="video-thumbnail"><i class="fas fa-play-circle"></i></div><div style="padding:10px"><b>${v.title}</b></div><a href="${v.url}" target="_blank" class="play-btn">تشغيل الفيديو المباشر</a></div>`;
+                });
+            }
+        }
+
+        function goBack() { navHistory.pop(); const p = navHistory.pop(); render(p.view, p.id); }
+        render('home');
+    </script>
+</body>
+    </html>
+    
