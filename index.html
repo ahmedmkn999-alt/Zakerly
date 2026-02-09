@@ -1,86 +1,12 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>GIZA ERP | لوحة تحكم يوسف</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <style>
-        :root { --bg: #020617; --card: #0f172a; --accent: #22d3ee; --text: #f8fafc; --border: #1e293b; }
-        body { background: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; margin: 0; display: flex; }
-        .sidebar { width: 250px; background: var(--card); height: 100vh; position: fixed; right: 0; padding: 20px; border-left: 1px solid var(--border); }
-        .main { margin-right: 250px; padding: 30px; width: 100%; }
-        .nav-item { padding: 12px; margin-bottom: 5px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 10px; }
-        .nav-item.active { background: rgba(34, 211, 238, 0.1); color: var(--accent); }
-        .card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 20px; }
-        .btn { background: var(--accent); color: #000; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .hidden { display: none; }
-        table { width: 100%; border-collapse: collapse; text-align: right; }
-        th, td { padding: 12px; border-bottom: 1px solid var(--border); }
-    </style>
-</head>
-<body>
-    <nav class="sidebar">
-        <h2>GIZA ERP</h2>
-        <div class="nav-item active" onclick="showTab('dash')"><i class="fas fa-home"></i> الرئيسية</div>
-        <div class="nav-item" onclick="showTab('lab')"><i class="fas fa-flask"></i> رادار الروابط</div>
-        <div class="nav-item" onclick="showTab('gen')"><i class="fas fa-key"></i> مولد الأكواد</div>
-    </nav>
-
-    <main class="main">
-        <div class="card">
-            <h1>لوحة التحكم - يوسف 🚀</h1>
-            <button class="btn" onclick="bypass()">🔓 كسر الحماية (Bypass)</button>
+// الاستماع للينكات المكتشفة من Firebase
+db.ref('app_interceptor').on('child_added', (snapshot) => {
+    const data = snapshot.val();
+    const feed = document.getElementById('app-live-feed'); // المكان اللي بيعرض النتائج
+    feed.innerHTML = `
+        <div class="card" style="border-right: 5px solid var(--accent); margin-bottom:10px;">
+            <small style="color:var(--muted)">${data.time}</small>
+            <div style="word-break:break-all; font-family:monospace; margin:5px 0;">${data.link}</div>
+            <a href="${data.link}" target="_blank" class="btn-action">تشغيل الفيديو المكتشف</a>
         </div>
-
-        <div id="tab-dash" class="tab-content">
-            <div class="card"><h3>حالة النظام: متصل بقاعدة بيانات المنصة</h3></div>
-        </div>
-
-        <div id="tab-lab" class="tab-content hidden">
-            <div class="card">
-                <h3>استخراج روابط الفيديوهات المباشرة 📡</h3>
-                <button class="btn" onclick="harvest()">🔎 مسح الداتا المستخرجة</button>
-                <table>
-                    <thead><tr><th>المصدر</th><th>الرابط المكتشف</th><th>فتح</th></tr></thead>
-                    <tbody id="res-body"></tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        // داتا الفايربيز اللي أنت سحبتها
-        const rawData = {
-            "support_tickets": { /* الصق هنا داتا support_tickets اللي بعتها */ },
-            "cheatAttempts": { /* الصق هنا داتا cheatAttempts */ }
-        };
-
-        function bypass() {
-            localStorage.setItem("studentInfo", JSON.stringify({studentName: "يوسف", studentCode: "589718", deviceCode: "DID-0EB45049E23E"}));
-            localStorage.setItem("activeCode", "589718");
-            alert("✅ تم زرع الهوية! افتح المنصة الآن.");
-        }
-
-        function harvest() {
-            const body = document.getElementById('res-body');
-            body.innerHTML = "";
-            const regex = /(https?:\/\/[^\s"]+\.(m3u8|mp4)|https?:\/\/player\.vimeo\.com[^\s"]+)/g;
-            Object.values(rawData.support_tickets).forEach(t => {
-                const matches = (t.message + (t.adminReply || "")).match(regex);
-                if (matches) matches.forEach(link => {
-                    body.innerHTML += `<tr><td>دعم: ${t.studentName}</td><td style="color:var(--accent)">${link.substring(0,30)}...</td><td><a href="${link}" target="_blank" style="color:#fff">🔗</a></td></tr>`;
-                });
-            });
-        }
-
-        function showTab(id) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-            document.getElementById('tab-' + id).classList.remove('hidden');
-        }
-    </script>
-</body>
-                                   </html>
-                                   
+    ` + feed.innerHTML;
+});
